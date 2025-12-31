@@ -1,0 +1,270 @@
+:root {
+  --bg-dark: #0f172a;
+  --bg-panel: #1e293b;
+  --bg-hover: #334155;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border-color: #334155;
+  --canvas-bg: #E5E5E5;
+  --danger: #ef4444;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Layout */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.editor-header {
+  height: 60px;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #60a5fa, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.editor-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.editor-sidebar {
+  width: 200px;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-main {
+  flex: 1;
+  background-color: var(--bg-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border-color);
+  margin: 0 5px;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.tool-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.tool-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.tool-btn.active {
+  background-color: var(--accent);
+  color: white;
+}
+
+.tool-btn.primary {
+  background-color: var(--accent);
+  color: white;
+  padding: 8px 16px;
+}
+
+.tool-btn.primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.tool-btn.danger {
+  color: var(--danger);
+}
+.tool-btn.danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.btn-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Inputs */
+.font-size-input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.color-input {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Slide List */
+.slide-list {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slide-thumbnail {
+  aspect-ratio: 16/9;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.slide-thumbnail.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.slide-number {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #333;
+  background: rgba(255,255,255,0.8);
+  padding: 2px 4px;
+  border-radius: 3px;
+  z-index: 2;
+}
+
+.slide-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-content {
+    color: #999;
+    font-size: 0.7rem;
+}
+
+.delete-slide-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  font-size: 0.8rem;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: none;
+  z-index: 2;
+}
+
+.slide-thumbnail:hover .delete-slide-btn {
+  display: block;
+}
+
+/* Canvas */
+.canvas-wrapper {
+  padding: 40px;
+  min-width: fit-content;
+  min-height: fit-content;
+}
+
+.slide-canvas {
+  width: 960px; /* Standard 16:9 approx scaled down or up */
+  height: 540px;
+  background-color: white;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden; /* Clips elements outside slide */
+}
+
+/* Elements */
+.element-selected {
+  outline: 2px dashed var(--accent);
+}
+
+.element-text {
+    outline: none;
+    border: none;
+    background: transparent;
+}
