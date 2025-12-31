@@ -1,13 +1,16 @@
 import React, { useRef } from 'react';
 import { Rnd } from 'react-rnd';
 import { usePresentation } from '../hooks/usePresentation';
+import { ReactTransliterate } from "react-transliterate";
+import "react-transliterate/dist/index.css";
 
 const Canvas = () => {
     const {
         currentSlide,
         selectedElementId,
         setSelectedElementId,
-        updateElement
+        updateElement,
+        typingLanguage
     } = usePresentation();
     const fileInputRef = useRef(null);
 
@@ -28,7 +31,16 @@ const Canvas = () => {
 
     return (
         <div className="canvas-container" onClick={handleCanvasClick}>
-            <div className="slide-canvas">
+            <div
+                className="slide-canvas"
+                style={{
+                    backgroundColor: currentSlide.background?.color || '#ffffff',
+                    backgroundImage: currentSlide.background?.image ? `url(${currentSlide.background.image})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
+            >
                 {currentSlide.elements.map((el) => (
                     <Rnd
                         key={el.id}
@@ -61,14 +73,29 @@ const Canvas = () => {
                             }}
                         >
                             {el.type === 'text' ? (
-                                <div
-                                    contentEditable
-                                    suppressContentEditableWarning
-                                    style={{ width: '100%', height: '100%', outline: 'none' }}
-                                    onBlur={(e) => handleContentChange(el.id, e.target.innerText)}
-                                >
-                                    {el.content}
-                                </div>
+                                typingLanguage === 'ta' ? (
+                                    <ReactTransliterate
+                                        value={el.content}
+                                        onChangeText={(text) => handleContentChange(el.id, text)}
+                                        lang="ta"
+                                        containerStyles={{ width: '100%', height: '100%' }}
+                                        renderComponent={(props) => <textarea {...props} style={{ ...props.style, width: '100%', height: '100%', resize: 'none', border: 'none', background: 'transparent', outline: 'none', ...el.style }} />}
+                                    />
+                                ) : (
+                                    <textarea
+                                        value={el.content}
+                                        onChange={(e) => handleContentChange(el.id, e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            resize: 'none',
+                                            border: 'none',
+                                            background: 'transparent',
+                                            outline: 'none',
+                                            ...el.style
+                                        }}
+                                    />
+                                )
                             ) : (
                                 <img src={el.content} alt="slide-img" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             )}

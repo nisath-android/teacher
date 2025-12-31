@@ -7,7 +7,7 @@ const Editor = () => {
     return (
         <div className="editor-layout">
             <header className="editor-header">
-                <div className="logo">Presento</div>
+                <div className="logo">Nursing PPT</div>
                 <Toolbar />
             </header>
             <div className="editor-body">

@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "docx": "^9.5.1",
+    "file-saver": "^2.0.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.4",
     "lucide-react": "^0.562.0",
     "pptxgenjs": "^4.0.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-rnd": "^10.5.2"
+    "react-rnd": "^10.5.2",
+    "react-transliterate": "^1.1.9"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.2",

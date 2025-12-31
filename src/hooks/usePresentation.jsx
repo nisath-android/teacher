@@ -6,16 +6,25 @@ export const usePresentation = () => useContext(PresentationContext);
 
 export const PresentationProvider = ({ children }) => {
   const [slides, setSlides] = useState([
-    { id: 1, elements: [] } 
+    {
+      id: 1,
+      elements: [],
+      background: { color: '#ffffff', image: null }
+    }
   ]);
   const [currentSlideId, setCurrentSlideId] = useState(1);
   const [selectedElementId, setSelectedElementId] = useState(null);
+  const [typingLanguage, setTypingLanguage] = useState('en');
 
   const currentSlide = slides.find(s => s.id === currentSlideId);
 
   const addSlide = () => {
     const newId = Math.max(...slides.map(s => s.id), 0) + 1;
-    setSlides([...slides, { id: newId, elements: [] }]);
+    setSlides([...slides, {
+      id: newId,
+      elements: [],
+      background: { color: '#ffffff', image: null }
+    }]);
     setCurrentSlideId(newId);
   };
 
@@ -26,6 +35,19 @@ export const PresentationProvider = ({ children }) => {
     if (currentSlideId === id) {
       setCurrentSlideId(newSlides[0].id);
     }
+  };
+
+  const updateSlideBackground = (id, newBackground) => {
+    const updatedSlides = slides.map(s => {
+      if (s.id === id) {
+        return {
+          ...s,
+          background: { ...s.background, ...newBackground }
+        };
+      }
+      return s;
+    });
+    setSlides(updatedSlides);
   };
 
   const addElement = (type, content = '') => {
@@ -72,9 +94,9 @@ export const PresentationProvider = ({ children }) => {
     });
     setSlides(updatedSlides);
   };
-  
+
   const removeElement = (id) => {
-      const updatedSlides = slides.map(s => {
+    const updatedSlides = slides.map(s => {
       if (s.id === currentSlideId) {
         const updatedElements = s.elements.filter(el => el.id !== id);
         return { ...s, elements: updatedElements };
@@ -95,9 +117,12 @@ export const PresentationProvider = ({ children }) => {
       setSelectedElementId,
       addSlide,
       deleteSlide,
+      updateSlideBackground,
       addElement,
       updateElement,
-      removeElement
+      removeElement,
+      typingLanguage,
+      setTypingLanguage
     }}>
       {children}
     </PresentationContext.Provider>
