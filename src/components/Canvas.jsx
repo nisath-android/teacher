@@ -1,8 +1,65 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
 import { usePresentation } from '../hooks/usePresentation';
 import { ReactTransliterate } from "react-transliterate";
 import "react-transliterate/dist/index.css";
+
+const TextElement = ({ el, isSelected, typingLanguage, onContentChange }) => {
+    const textAreaRef = useRef(null);
+
+    useEffect(() => {
+        if (isSelected && textAreaRef.current) {
+            // Small timeout to ensure the element is rendered and ready to receive focus
+            // especially after a click that might have caused a re-render
+            setTimeout(() => {
+                textAreaRef.current.focus();
+                // Optional: Move cursor to end of text
+                const len = textAreaRef.current.value.length;
+                textAreaRef.current.setSelectionRange(len, len);
+            }, 0);
+        }
+    }, [isSelected]);
+
+    const commonStyles = {
+        width: '100%',
+        height: '100%',
+        resize: 'none',
+        border: 'none',
+        background: 'transparent',
+        outline: 'none',
+        ...el.style
+    };
+
+    if (typingLanguage === 'ta') {
+        return (
+            <ReactTransliterate
+                value={el.content}
+                onChangeText={(text) => onContentChange(el.id, text)}
+                lang="ta"
+                containerStyles={{ width: '100%', height: '100%' }}
+                renderComponent={(props) => (
+                    <textarea
+                        {...props}
+                        ref={(e) => {
+                            props.ref(e);
+                            textAreaRef.current = e;
+                        }}
+                        style={{ ...props.style, ...commonStyles }}
+                    />
+                )}
+            />
+        );
+    }
+
+    return (
+        <textarea
+            ref={textAreaRef}
+            value={el.content}
+            onChange={(e) => onContentChange(el.id, e.target.value)}
+            style={commonStyles}
+        />
+    );
+};
 
 const Canvas = () => {
     const {
@@ -73,29 +130,12 @@ const Canvas = () => {
                             }}
                         >
                             {el.type === 'text' ? (
-                                typingLanguage === 'ta' ? (
-                                    <ReactTransliterate
-                                        value={el.content}
-                                        onChangeText={(text) => handleContentChange(el.id, text)}
-                                        lang="ta"
-                                        containerStyles={{ width: '100%', height: '100%' }}
-                                        renderComponent={(props) => <textarea {...props} style={{ ...props.style, width: '100%', height: '100%', resize: 'none', border: 'none', background: 'transparent', outline: 'none', ...el.style }} />}
-                                    />
-                                ) : (
-                                    <textarea
-                                        value={el.content}
-                                        onChange={(e) => handleContentChange(el.id, e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            resize: 'none',
-                                            border: 'none',
-                                            background: 'transparent',
-                                            outline: 'none',
-                                            ...el.style
-                                        }}
-                                    />
-                                )
+                                <TextElement
+                                    el={el}
+                                    isSelected={selectedElementId === el.id}
+                                    typingLanguage={typingLanguage}
+                                    onContentChange={handleContentChange}
+                                />
                             ) : (
                                 <img src={el.content} alt="slide-img" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             )}
